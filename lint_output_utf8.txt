@@ -1,0 +1,40 @@
+﻿
+C:\Drive\Games\Apps\first 1.0 - Copy\src\views\Game.jsx
+  270:7  error    Error: Cannot access variable before it is declared
+
+`evaluateRound` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  268 |     if (isHost && p1Choice && (p2Choice || isSoloTestMode) && roundState === "playing") {
+  269 |       const p2ActualChoice = isSoloTestMode ? ["rock", "paper", "scissors"][Math.floor(Math.random() * 3)] : p2Choice;
+> 270 |       evaluateRound(p1Choice, p2ActualChoice);
+      |       ^^^^^^^^^^^^^ `evaluateRound` accessed before it is declared
+  271 |     }
+  272 |   }, [p1Choice, p2Choice, roundState, isHost]);
+  273 |
+
+  272 |   }, [p1Choice, p2Choice, roundState, isHost]);
+  273 |
+> 274 |   const evaluateRound = async (c1, c2) => {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 275 |     let winner = 0; // 0 tie, 1 p1, 2 p2
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 276 |     if (
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 296 |     });
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 297 |   };
+      | ^^^^^ `evaluateRound` is declared here
+  298 |
+  299 |   const handleStartGame = async () => {
+  300 |     if (!isHost) return;  react-hooks/immutability
+  272:6  warning  React Hook useEffect has missing dependencies: 'evaluateRound' and 'isSoloTestMode'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/exhaustive-deps
+  370:9  error    'theirChoiceLabel' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+  441:9  error    'gameType' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 no-unused-vars
+
+C:\Drive\Games\Apps\first 1.0 - Copy\src\views\Home.jsx
+  13:10  error  'loading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  51:16  error  'err' is defined but never used                                                          no-unused-vars
+
+Γ£û 6 problems (5 errors, 1 warning)
+
