@@ -54,11 +54,10 @@ export const listenToUserProfile = (uid, callback) => {
   });
 };
 
-export const updateUserProfile = async (uid, { displayName, photoURL, theme }) => {
+export const updateUserProfile = async (uid, { displayName, photoURL }) => {
   const updates = {};
   if (displayName !== undefined) updates.displayName = displayName;
   if (photoURL !== undefined) updates.photoURL = photoURL;
-  if (theme !== undefined) updates.theme = theme;
   await updateDoc(doc(db, 'users', uid), updates);
 };
 

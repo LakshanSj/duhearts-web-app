@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Gamepad2, MessageCircle, Image as ImageIcon } from 'lucide-react';
-import { createRoom, joinRoom, listenToRoom, leaveGame } from '../services/roomService';
+import { createRoom, joinRoom, listenToRoom } from '../services/roomService';
 import GlobalChat from '../components/GlobalChat';
 import Gallery from '../components/Gallery';
 import sosImg from '../assets/sos.png';
 import tictactoeImg from '../assets/tictactoe.png';
 import rpsImg from '../assets/rps.png';
+import numberguessingImg from '../assets/numberguessing.png';
 
 export default function Home({ user, userProfile }) {
   const navigate = useNavigate();
@@ -16,14 +17,6 @@ export default function Home({ user, userProfile }) {
   const [activeTab, setActiveTab] = useState('games');
 
   const pairId = user && userProfile?.partnerId ? [user.uid, userProfile.partnerId].sort().join('_') : null;
-
-  // When landing on Home, remove self from activePlayers so the
-  // 'Waiting for partner...' badge doesn't show stale state.
-  useEffect(() => {
-    if (pairId && user) {
-      leaveGame(pairId, user).catch(() => {});
-    }
-  }, [pairId, user?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!pairId) return;
@@ -40,7 +33,7 @@ export default function Home({ user, userProfile }) {
     }
 
     setLoading(true);
-    setError('');
+    setError('Please wait...');
 
     try {
       if (activeRoom && activeRoom.gameType === gameType && activeRoom.hostId !== user.uid) {
@@ -51,7 +44,6 @@ export default function Home({ user, userProfile }) {
           createRoom(gameType, user, pairId, userProfile),
           new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout: Could not reach Firebase.")), 5000))
         ]);
-        setError('');
         navigate(`/room/${pairId}?game=${gameType}`);
       }
     } catch (err) {
@@ -149,6 +141,20 @@ export default function Home({ user, userProfile }) {
             </div>
           </div>
 
+          <div className="game-bubble-card game-card-item">
+            <div className="bubble-content">
+              <h4>Hi-Lo</h4>
+              <p>Guess the secret number!</p>
+              <button className="gradient-btn" disabled={loading} onClick={() => handleAction('number_guessing')}>
+                {getButtonLabel('number_guessing')}
+              </button>
+              {renderGameStatus('number_guessing')}
+            </div>
+            <div className="bubble-image-container" style={{ background: 'linear-gradient(135deg, #f8b4ff, #b4d4ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem' }}>
+              <img src={numberguessingImg} alt="Number Guessing Game" />
+            </div>
+          </div>
+
           <div style={{ flexShrink: 0, width: '1px' }} />
         </div>
       </div>
@@ -173,44 +179,55 @@ export default function Home({ user, userProfile }) {
       </div>
 
       {/* Content Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: 'calc(70px + env(safe-area-inset-bottom, 0px))', overflowY: activeTab === 'chat' ? 'hidden' : 'auto', overflowX: 'hidden', minHeight: 0 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: '70px', overflowY: activeTab === 'chat' ? 'hidden' : 'auto', overflowX: 'hidden', minHeight: 0 }}>
         {activeTab === 'games' && renderGamesTab()}
         {activeTab === 'chat' && <GlobalChat user={user} userProfile={userProfile} pairId={pairId} />}
         {activeTab === 'gallery' && <Gallery user={user} userProfile={userProfile} pairId={pairId} />}
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="bottom-nav">
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: 'rgba(255, 255, 255, 0.92)',
+        backdropFilter: 'blur(12px)',
+        borderTop: '2px solid var(--glass-border)',
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        zIndex: 100,
+        boxShadow: '0 -4px 10px rgba(0,0,0,0.05)',
+        paddingTop: '8px',
+        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+        height: 'auto',
+        minHeight: '60px'
+      }}>
         <div
-          id="tab-games"
-          className="bottom-nav-item"
           onClick={() => setActiveTab('games')}
-          style={{ color: activeTab === 'games' ? 'var(--accent-primary)' : 'var(--text-muted)' }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '33%', cursor: 'pointer', color: activeTab === 'games' ? 'var(--accent-primary)' : 'var(--text-muted)' }}
         >
           <Gamepad2 size={24} />
-          <span>Games</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', marginTop: '4px' }}>Games</span>
         </div>
 
         <div
-          id="tab-chat"
-          className="bottom-nav-item"
           onClick={() => setActiveTab('chat')}
-          style={{ color: activeTab === 'chat' ? 'var(--accent-primary)' : 'var(--text-muted)' }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '33%', cursor: 'pointer', color: activeTab === 'chat' ? 'var(--accent-primary)' : 'var(--text-muted)' }}
         >
           <MessageCircle size={24} />
-          <span>Chat</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', marginTop: '4px' }}>Chat</span>
         </div>
 
         <div
-          id="tab-gallery"
-          className="bottom-nav-item"
           onClick={() => setActiveTab('gallery')}
-          style={{ color: activeTab === 'gallery' ? 'var(--accent-primary)' : 'var(--text-muted)' }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '33%', cursor: 'pointer', color: activeTab === 'gallery' ? 'var(--accent-primary)' : 'var(--text-muted)' }}
         >
           <ImageIcon size={24} />
-          <span>Gallery</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', marginTop: '4px' }}>Gallery</span>
         </div>
-      </nav>
+      </div>
 
     </div>
   );

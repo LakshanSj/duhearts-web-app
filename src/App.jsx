@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavig
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, logout } from './firebase';
 import { listenToUserProfile, getUserProfile } from './services/userService';
-import { initTheme } from './hooks/useTheme';
 import { Settings as SettingsIcon, User, LogOut } from 'lucide-react';
+import { useTheme, applyTheme } from './hooks/useTheme';
 import Home from './views/Home';
 import Room from './views/Room';
 import Game from './views/Game';
@@ -54,18 +54,24 @@ function TopNav({ currentUser, userProfile, partnerProfile, handleAuth, loading 
       {/* Left: logo */}
       <h2 style={{ flexShrink: 0 }}>DuoHearts ❤️</h2>
 
-      {/* Center: couple display (hidden on small screens via CSS) */}
+      {/* Center: couple display */}
       {!loading && currentUser && userProfile?.partnerId && partnerProfile && (
-        <div className="topnav-couple">
-          <Avatar photoURL={userProfile.photoURL} name={myName} size={30} />
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.1 }}>
-            <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--accent-primary)', maxWidth: 55, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{myName}</span>
-          </div>
-          <span style={{ fontSize: '0.9rem', margin: '0 0.1rem' }}>❤️</span>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.1 }}>
-            <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--accent-secondary)', maxWidth: 55, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{partnerName}</span>
-          </div>
-          <Avatar photoURL={partnerProfile.photoURL} name={partnerName} size={30} />
+        <div style={{
+          position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+          display: 'flex', alignItems: 'center', gap: '0.4rem',
+          background: 'var(--glass-bg)',
+          border: '2.5px solid var(--glass-border)',
+          borderRadius: '999px',
+          padding: '0.2rem 0.6rem 0.2rem 0.2rem',
+          boxShadow: '3px 3px 0px rgba(77,58,43,0.15)',
+          maxWidth: 'calc(100vw - 280px)',
+          overflow: 'hidden',
+        }}>
+          <Avatar photoURL={userProfile.photoURL} name={myName} size={32} />
+          <span className="couple-name" style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--accent-primary)', maxWidth: 55, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{myName}</span>
+          <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>❤️</span>
+          <span className="couple-name" style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--accent-secondary)', maxWidth: 55, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{partnerName}</span>
+          <Avatar photoURL={partnerProfile.photoURL} name={partnerName} size={32} />
         </div>
       )}
 
@@ -124,7 +130,6 @@ function App() {
       setLoadingProfile(true);
       const unsubscribeProfile = listenToUserProfile(currentUser.uid, (profile) => {
         setUserProfile(profile);
-        initTheme(profile?.theme);
         setLoadingProfile(false);
       });
       return unsubscribeProfile;
@@ -150,6 +155,11 @@ function App() {
     }, 15000);
     return () => clearInterval(interval);
   }, [userProfile?.partnerId]);
+
+  // Apply theme whenever profile loads/changes
+  useEffect(() => {
+    applyTheme(userProfile?.theme || 'paper');
+  }, [userProfile?.theme]);
 
   const handleAuth = async () => { if (currentUser) await logout(); };
 

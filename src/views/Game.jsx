@@ -46,19 +46,19 @@ function SOSGame({ roomData, user }) {
   const checkSOS = (newBoard, index, letter) => {
     let newSOSCount = 0, newLines = [];
     const r = Math.floor(index / SIZE), c = index % SIZE;
-    const checkLine = (r1,c1,r2,c2,r3,c3) => {
-      if ([r1,r2,r3].every(x=>x>=0&&x<SIZE) && [c1,c2,c3].every(x=>x>=0&&x<SIZE)) {
-        const [i1,i2,i3] = [r1*SIZE+c1, r2*SIZE+c2, r3*SIZE+c3];
-        if (newBoard[i1]==='S' && newBoard[i2]==='O' && newBoard[i3]==='S') { newLines.push(i1,i2,i3); return 1; }
+    const checkLine = (r1, c1, r2, c2, r3, c3) => {
+      if ([r1, r2, r3].every(x => x >= 0 && x < SIZE) && [c1, c2, c3].every(x => x >= 0 && x < SIZE)) {
+        const [i1, i2, i3] = [r1 * SIZE + c1, r2 * SIZE + c2, r3 * SIZE + c3];
+        if (newBoard[i1] === 'S' && newBoard[i2] === 'O' && newBoard[i3] === 'S') { newLines.push(i1, i2, i3); return 1; }
       }
       return 0;
     };
-    for (let [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]) {
-      if (letter==='S') {
-        newSOSCount += checkLine(r,c,r+dr,c+dc,r+2*dr,c+2*dc);
-        newSOSCount += checkLine(r-2*dr,c-2*dc,r-dr,c-dc,r,c);
-      } else if (letter==='O') {
-        newSOSCount += checkLine(r-dr,c-dc,r,c,r+dr,c+dc);
+    for (let [dr, dc] of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
+      if (letter === 'S') {
+        newSOSCount += checkLine(r, c, r + dr, c + dc, r + 2 * dr, c + 2 * dc);
+        newSOSCount += checkLine(r - 2 * dr, c - 2 * dc, r - dr, c - dc, r, c);
+      } else if (letter === 'O') {
+        newSOSCount += checkLine(r - dr, c - dc, r, c, r + dr, c + dc);
       }
     }
     return { newSOSCount, newLines };
@@ -102,15 +102,15 @@ function SOSGame({ roomData, user }) {
         </div>
       </div>
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-        <button className={`btn ${selectedLetter==='S'?'btn-primary':'btn-secondary'}`} onClick={() => setSelectedLetter('S')}>Place 'S'</button>
-        <button className={`btn ${selectedLetter==='O'?'btn-primary':'btn-secondary'}`} onClick={() => setSelectedLetter('O')}>Place 'O'</button>
+        <button className={`btn ${selectedLetter === 'S' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setSelectedLetter('S')}>Place 'S'</button>
+        <button className={`btn ${selectedLetter === 'O' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setSelectedLetter('O')}>Place 'O'</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIZE}, clamp(40px, 12vw, 60px))`, gap: 'clamp(4px,1.5vw,8px)' }}>
         {board.map((cell, i) => (
           <button key={i} className="glass-panel" style={{
             width: '100%', aspectRatio: '1/1', fontSize: 'clamp(1rem,5vw,1.5rem)', padding: 0, fontWeight: 'bold',
-            color: 'var(--text-main)', background: (roomData.winningLines||[]).includes(i) ? 'var(--accent-hover)' : 'var(--glass-bg)',
-            cursor: (isMyTurn && cell==="") ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            color: 'var(--text-main)', background: (roomData.winningLines || []).includes(i) ? 'var(--accent-hover)' : 'var(--glass-bg)',
+            cursor: (isMyTurn && cell === "") ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center'
           }} onClick={() => handleClick(i)} disabled={cell !== ""}>
             {cell}
           </button>
@@ -131,8 +131,8 @@ function TicTacToeGame({ roomData, user }) {
   const isMyTurn = isSoloTestMode ? true : (isHost ? turnPlayer1 : !turnPlayer1);
 
   const checkWin = (b) => {
-    const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    for (let [a,bx,c] of lines) if (b[a] && b[a]===b[bx] && b[a]===b[c]) return { winner: b[a], line: [a,bx,c] };
+    const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+    for (let [a, bx, c] of lines) if (b[a] && b[a] === b[bx] && b[a] === b[c]) return { winner: b[a], line: [a, bx, c] };
     return null;
   };
 
@@ -157,9 +157,9 @@ function TicTacToeGame({ roomData, user }) {
   const isGameOver = winningLines.length > 0 || !board.includes("");
   const n1 = name1(roomData), n2 = name2(roomData);
   let status = isSoloTestMode
-    ? `Test Mode — Turn: ${turnPlayer1 ? n1+' (X)' : n2+' (O)'}`
-    : `Turn: ${turnPlayer1 ? n1+' (X)' : n2+' (O)'}`;
-  if (winningLines.length > 0) status = `${board[winningLines[0]]==='X' ? n1 : n2} Wins! 🎉`;
+    ? `Test Mode — Turn: ${turnPlayer1 ? n1 + ' (X)' : n2 + ' (O)'}`
+    : `Turn: ${turnPlayer1 ? n1 + ' (X)' : n2 + ' (O)'}`;
+  if (winningLines.length > 0) status = `${board[winningLines[0]] === 'X' ? n1 : n2} Wins! 🎉`;
   else if (isGameOver) status = "It's a draw! 🎀";
 
   return (
@@ -169,9 +169,9 @@ function TicTacToeGame({ roomData, user }) {
         {board.map((cell, i) => (
           <button key={i} className="glass-panel" style={{
             width: '100%', aspectRatio: '1/1', fontSize: 'clamp(2rem,8vw,3rem)', padding: 0, fontWeight: 'bold',
-            color: cell==='X' ? 'var(--text-main)' : 'var(--accent-hover)',
+            color: cell === 'X' ? 'var(--text-main)' : 'var(--accent-hover)',
             background: winningLines.includes(i) ? '#ffd58c' : 'var(--glass-bg)',
-            cursor: (isMyTurn && cell==="" && !isGameOver) ? 'pointer' : 'not-allowed',
+            cursor: (isMyTurn && cell === "" && !isGameOver) ? 'pointer' : 'not-allowed',
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }} onClick={() => handleClick(i)} disabled={cell !== "" || winningLines.length > 0}>
             {cell}
@@ -203,18 +203,18 @@ function RockPaperScissorsGame({ roomData, user }) {
 
   const evaluateRound = useCallback(async (c1, c2) => {
     let winner = 0;
-    if ((c1==='rock'&&c2==='scissors')||(c1==='paper'&&c2==='rock')||(c1==='scissors'&&c2==='paper')) winner = 1;
+    if ((c1 === 'rock' && c2 === 'scissors') || (c1 === 'paper' && c2 === 'rock') || (c1 === 'scissors' && c2 === 'paper')) winner = 1;
     else if (c1 !== c2) winner = 2;
     const newScores = { ...scores };
-    if (winner===1) newScores.p1 += 1;
-    if (winner===2) newScores.p2 += 1;
+    if (winner === 1) newScores.p1 += 1;
+    if (winner === 2) newScores.p2 += 1;
     await updateGameState(roomData.roomId, { scores: newScores, roundState: currentRound >= maxRounds ? "over" : "revealed", p2Choice: c2 });
   }, [scores, currentRound, maxRounds, roomData.roomId]);
 
   useEffect(() => {
-    if (roundState==="playing" && (!p1Choice || !p2Choice)) setLocalChoice("");
-    if (isHost && p1Choice && (p2Choice || isSoloTestMode) && roundState==="playing") {
-      const p2Actual = isSoloTestMode ? ["rock","paper","scissors"][Math.floor(Math.random()*3)] : p2Choice;
+    if (roundState === "playing" && (!p1Choice || !p2Choice)) setLocalChoice("");
+    if (isHost && p1Choice && (p2Choice || isSoloTestMode) && roundState === "playing") {
+      const p2Actual = isSoloTestMode ? ["rock", "paper", "scissors"][Math.floor(Math.random() * 3)] : p2Choice;
       evaluateRound(p1Choice, p2Actual);
     }
   }, [p1Choice, p2Choice, roundState, isHost, isSoloTestMode, evaluateRound]);
@@ -227,7 +227,7 @@ function RockPaperScissorsGame({ roomData, user }) {
 
   const handleNextRound = async () => {
     if (!isHost) return;
-    await updateGameState(roomData.roomId, { currentRound: currentRound+1, p1Choice: "", p2Choice: "", roundState: "playing" });
+    await updateGameState(roomData.roomId, { currentRound: currentRound + 1, p1Choice: "", p2Choice: "", roundState: "playing" });
   };
 
   const selectChoice = async (choice) => {
@@ -250,40 +250,34 @@ function RockPaperScissorsGame({ roomData, user }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
       <h3 style={{ marginBottom: '1rem' }}>Round {Math.min(currentRound, maxRounds)} of {maxRounds}</h3>
-
-      {/* Score cards — horizontal row, no wrapping */}
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.75rem', marginBottom: '1.5rem', width: '100%' }}>
         <div className="glass-panel" style={{ flex: 1, minWidth: 0, textAlign: 'center', padding: '0.75rem 0.5rem' }}>
           <h4 style={{ fontSize: 'clamp(0.75rem,3vw,1rem)', marginBottom: '0.4rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n1}</h4>
           <div style={{ fontSize: 'clamp(1rem,4vw,1.4rem)', fontWeight: 800 }}>Score: {scores.p1}</div>
           <div style={{ fontSize: 'clamp(1.8rem,7vw,3rem)', margin: '0.5rem 0' }}>
-            {roundState==="playing" ? (p1Choice ? "❔" : "⏳") : choiceIcons[p1Choice]}
+            {roundState === "playing" ? (p1Choice ? "❔" : "⏳") : choiceIcons[p1Choice]}
           </div>
         </div>
-
         <div style={{ display: 'flex', alignItems: 'center', fontSize: '1.5rem', flexShrink: 0 }}>VS</div>
-
         <div className="glass-panel" style={{ flex: 1, minWidth: 0, textAlign: 'center', padding: '0.75rem 0.5rem' }}>
           <h4 style={{ fontSize: 'clamp(0.75rem,3vw,1rem)', marginBottom: '0.4rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n2}</h4>
           <div style={{ fontSize: 'clamp(1rem,4vw,1.4rem)', fontWeight: 800 }}>Score: {scores.p2}</div>
           <div style={{ fontSize: 'clamp(1.8rem,7vw,3rem)', margin: '0.5rem 0' }}>
-            {roundState==="playing" ? (p2Choice ? "❔" : "⏳") : choiceIcons[p2Choice]}
+            {roundState === "playing" ? (p2Choice ? "❔" : "⏳") : choiceIcons[p2Choice]}
           </div>
         </div>
       </div>
-
       {roundState === "playing" && (
         <div style={{ textAlign: 'center', width: '100%' }}>
           <p style={{ marginBottom: '0.75rem', fontWeight: 'bold' }}>
             {localChoice ? "Choice locked! Waiting for opponent..." : "Make your choice:"}
           </p>
-          {/* Choice buttons always horizontal */}
           <div style={{ display: 'flex', flexDirection: 'row', gap: 'clamp(0.4rem,2vw,1rem)', justifyContent: 'center' }}>
-            {["rock","paper","scissors"].map(c => (
+            {["rock", "paper", "scissors"].map(c => (
               <button key={c} className="btn btn-secondary" style={{
                 fontSize: 'clamp(1.5rem,6vw,2.2rem)',
                 padding: 'clamp(0.5rem,2vw,1rem)',
-                background: localChoice===c ? 'var(--accent-secondary)' : '#fff',
+                background: localChoice === c ? 'var(--accent-secondary)' : '#fff',
                 minWidth: 0, flex: '0 0 auto',
               }} onClick={() => selectChoice(c)} disabled={!!myChoiceLabel}>
                 {choiceIcons[c]}
@@ -292,14 +286,12 @@ function RockPaperScissorsGame({ roomData, user }) {
           </div>
         </div>
       )}
-
       {roundState === "revealed" && isHost && (
         <button className="gradient-btn" style={{ marginTop: '1rem' }} onClick={handleNextRound}>Start Next Round</button>
       )}
       {roundState === "revealed" && !isHost && (
         <p style={{ marginTop: '1rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>Waiting for {n1} to start next round...</p>
       )}
-
       {roundState === "over" && (
         <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
           <h2 style={{ color: 'var(--accent-secondary)' }}>
@@ -311,6 +303,473 @@ function RockPaperScissorsGame({ roomData, user }) {
       )}
     </div>
   );
+}
+
+// ── Number Guessing Game ──────────────────────────────────────
+// GAME FLOW:
+// Both players secretly pick a number at the same time (simultaneous selection phase)
+// Then turns alternate: p1 guesses p2's number, then p2 guesses p1's number, back and forth
+// System auto-shows Higher/Lower hint. Fewest guesses wins the round.
+// Scores shown as guess-history bars. Win screen has confetti.
+
+function NumberGuessingGame({ roomData, user }) {
+  const isHost = user?.uid === roomData.hostId;
+  const n1 = name1(roomData);
+  const n2 = name2(roomData);
+
+  // Firestore state
+  const phase = roomData.ngPhase || 'selecting';
+  // phases: selecting | interleaved | round_over | game_over
+  const currentRound = roomData.ngRound || 1;
+  const scores = roomData.scores || { p1: 0, p2: 0 };
+
+  // Interleaved guessing state
+  const turn = roomData.ngTurn || 'p1'; // 'p1' or 'p2'
+  const subPhase = roomData.ngSubPhase || 'guessing'; // 'guessing' or 'responding'
+  const p1Guesses = roomData.ngP1Guesses || []; // [{value, hint, correctHint}]
+  const p2Guesses = roomData.ngP2Guesses || [];
+  const lastGuess = roomData.ngLastGuess || null;
+
+  // Secrets set during 'selecting' phase
+  const p1Secret = roomData.ngP1Secret || null;
+  const p2Secret = roomData.ngP2Secret || null;
+  const p1Selected = roomData.ngP1Selected || false;
+  const p2Selected = roomData.ngP2Selected || false;
+
+  // Local state
+  const [secretInput, setSecretInput] = useState('');
+  const [guessInput, setGuessInput] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const amISelectingHost = isHost && phase === 'selecting' && !p1Selected;
+  const amISelectingGuest = !isHost && phase === 'selecting' && !p2Selected;
+  const amISetting = amISelectingHost || amISelectingGuest;
+  const iAlreadySelected = (isHost && phase === 'selecting' && p1Selected) || (!isHost && phase === 'selecting' && p2Selected);
+
+  const amIGuesser = (phase === 'p1_guesses' && isHost) || (phase === 'p2_guesses' && !isHost);
+  const amISetter = (phase === 'p1_guesses' && !isHost) || (phase === 'p2_guesses' && isHost);
+
+  // Show confetti on game_over
+  useEffect(() => {
+    if (phase === 'game_over') {
+      setShowConfetti(true);
+      const t = setTimeout(() => setShowConfetti(false), 4000);
+      return () => clearTimeout(t);
+    }
+  }, [phase]);
+
+  // ── host starts the match ─────────────────────────────────
+  const handleStartMatch = async () => {
+    if (!isHost) return;
+    await updateGameState(roomData.roomId, {
+      ngRound: 1, scores: { p1: 0, p2: 0 },
+      ngPhase: 'selecting',
+      ngP1Secret: null, ngP2Secret: null,
+      ngP1Selected: false, ngP2Selected: false,
+      ngP1Guesses: [], ngP2Guesses: [],
+      ngTurn: 'p1', ngSubPhase: 'guessing', ngLastGuess: null,
+    });
+  };
+
+  // ── player submits their secret number ────────────────────
+  const handleSetSecret = async () => {
+    const n = parseInt(secretInput);
+    if (isNaN(n) || n < 1 || n > 100) {
+      if (window.showAlert) window.showAlert('Pick a number between 1 and 100.');
+      return;
+    }
+    setSubmitting(true);
+    const mySecretKey = isHost ? 'ngP1Secret' : 'ngP2Secret';
+    const mySelectedKey = isHost ? 'ngP1Selected' : 'ngP2Selected';
+    const otherSelected = isHost ? p2Selected : p1Selected;
+
+    const updates = {
+      [mySecretKey]: n,
+      [mySelectedKey]: true,
+    };
+
+    if (otherSelected) {
+      updates.ngPhase = 'interleaved';
+      updates.ngTurn = 'p1';
+      updates.ngSubPhase = 'guessing';
+      updates.ngLastGuess = null;
+      updates.ngP1Guesses = [];
+      updates.ngP2Guesses = [];
+    }
+
+    await updateGameState(roomData.roomId, updates);
+    setSecretInput('');
+    setSubmitting(false);
+  };
+
+  // ── Interleaved Guessing Logic ────────────────────────────
+  const handleGuess = async () => {
+    const g = parseInt(guessInput);
+    if (isNaN(g) || g < 1 || g > 100) {
+      if (window.showAlert) window.showAlert('Guess between 1 and 100.');
+      return;
+    }
+    setSubmitting(true);
+
+    // Update state to 'responding' sub-phase
+    await updateGameState(roomData.roomId, {
+      ngLastGuess: g,
+      ngSubPhase: 'responding',
+    });
+
+    setGuessInput('');
+    setSubmitting(false);
+  };
+
+  const handleRespond = async (hint) => {
+    setSubmitting(true);
+    const targetSecret = turn === 'p1' ? p2Secret : p1Secret;
+    if (targetSecret === null) return;
+
+    const isCorrect = lastGuess === targetSecret;
+
+    // System validation
+    let actualHint = isCorrect ? 'correct' : lastGuess < targetSecret ? 'low' : 'high';
+    const wasCorrectHint = hint === actualHint;
+
+    const newGuessObj = { value: lastGuess, hint: actualHint, correctResponse: wasCorrectHint };
+    const myGuessesKey = turn === 'p1' ? 'ngP1Guesses' : 'ngP2Guesses';
+    const currentGuesses = turn === 'p1' ? p1Guesses : p2Guesses;
+    const updatedGuesses = [...currentGuesses, newGuessObj];
+
+    const updates = {
+      [myGuessesKey]: updatedGuesses,
+      ngLastGuess: null,
+    };
+
+    if (isCorrect) {
+      const newScores = { ...scores };
+      if (turn === 'p1') newScores.p1 += 1; else newScores.p2 += 1;
+      updates.scores = newScores;
+      updates.ngPhase = 'game_over';
+    } else {
+      updates.ngTurn = turn === 'p1' ? 'p2' : 'p1';
+      updates.ngSubPhase = 'guessing';
+    }
+
+    await updateGameState(roomData.roomId, updates);
+    setSubmitting(false);
+  };
+
+  const handleNextRound = async () => {
+    if (!isHost) return;
+    await updateGameState(roomData.roomId, {
+      ngRound: currentRound + 1,
+      ngPhase: 'selecting',
+      ngP1Secret: null, ngP2Secret: null,
+      ngP1Selected: false, ngP2Selected: false,
+      ngP1Guesses: [], ngP2Guesses: [],
+      ngTurn: 'p1', ngSubPhase: 'guessing', ngLastGuess: null,
+    });
+  };
+
+  const handlePlayAgain = async () => {
+    if (!isHost) return;
+    await updateGameState(roomData.roomId, {
+      ngRound: 1, scores: { p1: 0, p2: 0 },
+      ngPhase: 'selecting',
+      ngP1Secret: null, ngP2Secret: null,
+      ngP1Selected: false, ngP2Selected: false,
+      ngP1Guesses: [], ngP2Guesses: [],
+      ngTurn: 'p1', ngSubPhase: 'guessing', ngLastGuess: null,
+    });
+  };
+
+  const handleExitGame = () => {
+    if (window.showConfirm) {
+      window.showConfirm("Are you sure you want to exit to Home?", () => navigate('/'));
+    } else {
+      if (window.confirm("Exit to Home?")) navigate('/');
+    }
+  };
+
+  // ── Guess history bar (Horizontal bars) ───────────
+  const GuessBar = ({ guesses, name, color, isMe }) => {
+    return (
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          fontWeight: 800, fontSize: '0.85rem', marginBottom: '0.4rem',
+          color, textAlign: 'center',
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+        }}>
+          {isMe ? '👤 ' : ''}{name}
+        </div>
+        <div style={{
+          display: 'flex', gap: '6px', alignItems: 'center',
+          minHeight: '44px', background: 'var(--input-bg)',
+          borderRadius: '12px', padding: '8px 12px',
+          border: '2px solid var(--glass-border)',
+          overflowX: 'auto', whiteSpace: 'nowrap',
+          scrollbarWidth: 'none', msOverflowStyle: 'none',
+        }}>
+          {guesses.length === 0 && <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700 }}>No guesses yet</span>}
+          {guesses.map((g, i) => (
+            <div key={i} style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: '8px',
+              border: '1.5px solid var(--glass-border)', flexShrink: 0,
+              animation: 'popIn 0.3s ease forwards',
+            }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>{g.value}</div>
+              <div style={{ fontSize: '0.65rem', fontWeight: 700, color: g.hint === 'low' ? '#22c55e' : g.hint === 'high' ? '#ef4444' : 'var(--accent-secondary)' }}>
+                {g.hint === 'low' ? '↑' : g.hint === 'high' ? '↓' : '✅'}
+              </div>
+            </div>
+          ))}
+          {/* Current turn indicator */}
+          {phase === 'interleaved' && ((turn === 'p1' && name === n1) || (turn === 'p2' && name === n2)) && subPhase === 'guessing' && (
+            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: color, opacity: 0.4, animation: 'pulse 1.5s infinite', flexShrink: 0 }} />
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // ── Score bars header ─────────────────────────────────────
+  const ScoreHeader = () => (
+    <div style={{ marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+        <h3 style={{ margin: 0 }}>Guessing Challenge</h3>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <span style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--accent-primary)' }}>
+            {n1}: {scores.p1}pt
+          </span>
+          <span style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--accent-secondary)' }}>
+            {n2}: {scores.p2}pt
+          </span>
+        </div>
+      </div>
+      {/* Both history bars visible side by side */}
+      <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <GuessBar guesses={p1Guesses} name={n1} color="var(--accent-primary)" isMe={isHost} />
+        <GuessBar guesses={p2Guesses} name={n2} color="var(--accent-secondary)" isMe={!isHost} />
+      </div>
+    </div>
+  );
+
+  // ── Confetti overlay ──────────────────────────────────────
+  const Confetti = () => {
+    const pieces = Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 1.5}s`,
+      color: ['#ff8c8c', '#ffd58c', '#a8edea', '#df8b91', '#c2e59c', '#b4d4ff'][i % 6],
+      size: `${8 + Math.random() * 12}px`,
+      duration: `${1.5 + Math.random()}s`,
+    }));
+    return (
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', borderRadius: 'inherit', zIndex: 10 }}>
+        <style>{`
+          @keyframes confettiFall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(300px) rotate(720deg); opacity: 0; }
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+          }
+        `}</style>
+        {pieces.map(p => (
+          <div key={p.id} style={{
+            position: 'absolute', top: 0, left: p.left,
+            width: p.size, height: p.size, borderRadius: '3px',
+            background: p.color,
+            animation: `confettiFall ${p.duration} ${p.delay} ease-in forwards`,
+          }} />
+        ))}
+      </div>
+    );
+  };
+
+  // ── GAME OVER ─────────────────────────────────────────────
+  if (phase === 'game_over') {
+    const winner = scores.p1 > scores.p2 ? n1 : scores.p2 > scores.p1 ? n2 : null;
+    return (
+      <div style={{ textAlign: 'center', width: '100%', position: 'relative' }}>
+        {showConfetti && <Confetti />}
+        <ScoreHeader />
+        <div style={{
+          fontSize: '4rem', marginBottom: '0.5rem',
+          animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+        }}>
+          {winner ? '🏆' : '🤝'}
+        </div>
+        <h2 style={{
+          color: 'var(--accent-secondary)', marginBottom: '0.5rem',
+          animation: 'popIn 0.5s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) both',
+        }}>
+          {winner ? `${winner} Wins!` : "It's a Tie!"} 🎉
+        </h2>
+
+        {isHost ? (
+          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1.5rem' }}>
+            <button className="gradient-btn" onClick={handlePlayAgain}>Play Again 🔄</button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', marginTop: '1.5rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontWeight: 700 }}>Waiting for {n1} to decide...</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── INTERLEAVED PHASE ─────────────────────────────────────
+  if (phase === 'interleaved') {
+    const isMyTurnToGuess = (turn === 'p1' && isHost) || (turn === 'p2' && !isHost);
+    const isMyTurnToRespond = (turn === 'p1' && !isHost) || (turn === 'p2' && isHost);
+    const otherPlayerName = isHost ? n2 : n1;
+
+    return (
+      <div style={{ width: '100%' }}>
+        <ScoreHeader />
+
+        {subPhase === 'guessing' && (
+          <div style={{ textAlign: 'center', animation: 'fadeIn 0.4s ease' }}>
+            <div style={{
+              padding: '0.8rem 1.2rem', borderRadius: '16px', background: 'var(--bg-secondary)',
+              border: '2px solid var(--glass-border)', marginBottom: '1.5rem', fontWeight: 800,
+            }}>
+              {isMyTurnToGuess ? `🎯 Your turn to guess ${otherPlayerName}'s number!` : `⏳ Waiting for ${otherPlayerName} to guess…`}
+            </div>
+
+            {isMyTurnToGuess && (
+              <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center' }}>
+                <input type="number" className="input-field" value={guessInput}
+                  onChange={(e) => setGuessInput(e.target.value)}
+                  placeholder="1 – 100" min="1" max="100"
+                  style={{ width: '110px', textAlign: 'center', fontSize: '1.3rem' }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
+                />
+                <button className="gradient-btn" onClick={handleGuess} disabled={submitting || !guessInput}>
+                  {submitting ? '...' : 'Guess! 🎯'}
+                </button>
+              </div>
+            )}
+            {!isMyTurnToGuess && (
+              <div style={{ fontSize: '3rem', animation: 'pulse 2s infinite' }}>🤔</div>
+            )}
+          </div>
+        )}
+
+        {subPhase === 'responding' && (
+          <div style={{ textAlign: 'center', animation: 'fadeIn 0.4s ease' }}>
+            <div style={{
+              padding: '0.8rem 1.2rem', borderRadius: '16px', background: 'var(--bg-secondary)',
+              border: '2px solid var(--glass-border)', marginBottom: '1.5rem', fontWeight: 800,
+            }}>
+              {isMyTurnToRespond ? `${otherPlayerName} guessed ${lastGuess}! Is it higher or lower?` : `⏳ Waiting for ${otherPlayerName} to respond…`}
+            </div>
+
+            {isMyTurnToRespond && (
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <button className="btn btn-secondary" style={{ fontSize: '1.2rem', padding: '0.8rem 1.5rem', borderRadius: '20px', backgroundColor: '#dcfce7', border: '3px solid #22c55e', color: '#166534' }}
+                  onClick={() => handleRespond('low')}>
+                  📈 HIGHER
+                </button>
+                <button className="btn btn-secondary" style={{ fontSize: '1.2rem', padding: '0.8rem 1.5rem', borderRadius: '20px', backgroundColor: '#fee2e2', border: '3px solid #ef4444', color: '#991b1b' }}
+                  onClick={() => handleRespond('high')}>
+                  📉 LOWER
+                </button>
+                <button className="gradient-btn" style={{ fontSize: '1.2rem', padding: '0.8rem 1.5rem' }}
+                  onClick={() => handleRespond('correct')}>
+                  🎯 CORRECT!
+                </button>
+              </div>
+            )}
+            {!isMyTurnToRespond && (
+              <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>
+                {otherPlayerName} is checking your guess: <span style={{ fontSize: '2.5rem', color: 'var(--accent-primary)' }}>{lastGuess}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+          <div style={{
+            padding: '0.5rem 1.2rem', display: 'inline-block',
+            borderRadius: '14px', background: 'var(--input-bg)',
+            border: '2px dashed var(--glass-border)', fontWeight: 800,
+            fontSize: '0.9rem', color: 'var(--text-muted)',
+          }}>
+            Your secret: <span style={{ color: 'var(--text-main)', fontSize: '1.1rem' }}>
+              {isHost ? p1Secret : p2Secret}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── SELECTING PHASE ───────────────────────────────────────
+  if (phase === 'selecting') {
+    return (
+      <div style={{ width: '100%' }}>
+        <ScoreHeader />
+        <div style={{
+          textAlign: 'center', padding: '0.6rem 1rem', borderRadius: '14px',
+          background: 'var(--bg-secondary)', border: '2px solid var(--glass-border)',
+          marginBottom: '1.2rem', fontWeight: 700, fontSize: '0.95rem',
+        }}>
+          🤫 Both players: pick your secret number simultaneously!
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.2rem', justifyContent: 'center' }}>
+          <div style={{
+            padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 700, fontSize: '0.85rem',
+            background: p1Selected ? 'var(--accent-primary)' : 'var(--input-bg)',
+            border: '2px solid var(--glass-border)',
+            color: p1Selected ? '#fff' : 'var(--text-muted)',
+          }}>
+            {n1}: {p1Selected ? '✅ Ready' : '⏳ Picking…'}
+          </div>
+          <div style={{
+            padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 700, fontSize: '0.85rem',
+            background: p2Selected ? 'var(--accent-secondary)' : 'var(--input-bg)',
+            border: '2px solid var(--glass-border)',
+            color: p2Selected ? '#fff' : 'var(--text-muted)',
+          }}>
+            {n2}: {p2Selected ? '✅ Ready' : '⏳ Picking…'}
+          </div>
+        </div>
+
+        {amISetting && (
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ marginBottom: '1rem' }}>Pick a secret number (1–100). Your partner will guess it!</p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center' }}>
+              <input type="number" className="input-field" value={secretInput}
+                onChange={(e) => setSecretInput(e.target.value)}
+                placeholder="1 – 100" min="1" max="100"
+                style={{ width: '110px', textAlign: 'center', fontSize: '1.3rem' }}
+                onKeyDown={(e) => e.key === 'Enter' && handleSetSecret()}
+              />
+              <button className="gradient-btn" onClick={handleSetSecret} disabled={submitting}>
+                {submitting ? 'Locking…' : 'Lock It 🔒'}
+              </button>
+            </div>
+            <p style={{ marginTop: '0.75rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              🤫 Only you can see this number!
+            </p>
+          </div>
+        )}
+
+        {iAlreadySelected && (
+          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+            <p style={{ fontWeight: 700 }}>Your number is locked in! Waiting for partner…</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return null;
 }
 
 // ── Main Game view ────────────────────────────────────────────
@@ -353,7 +812,7 @@ export default function Game({ user }) {
         const partnerName = user?.uid === data.hostId ? name2(data) : name1(data);
         if (partnerId) {
           const wasIn = prevActive.includes(partnerId);
-          const isIn  = currActive.includes(partnerId);
+          const isIn = currActive.includes(partnerId);
           if (wasIn && !isIn) setToast(`💔 ${partnerName} left the game`);
           if (!wasIn && isIn) setToast(`💖 ${partnerName} joined back!`);
         }
@@ -361,12 +820,7 @@ export default function Game({ user }) {
       prevRoomData.current = data;
       setRoomData(data);
     });
-    return () => unsubRoom();
-  }, [roomId]);
 
-  // Listen to chat messages (re-subscribes when msgLimit changes)
-  useEffect(() => {
-    if (!roomId) return;
     const unsubChat = listenToMessages(roomId, msgLimit, (msgs) => {
       if (chatScrollRef.current && loadingOlder) {
         const oldH = chatScrollRef.current.scrollHeight;
@@ -377,7 +831,8 @@ export default function Game({ user }) {
       }
       setMessages(msgs);
     });
-    return () => unsubChat();
+
+    return () => { unsubRoom(); unsubChat(); };
   }, [roomId, msgLimit]);
 
   useEffect(() => {
@@ -421,10 +876,11 @@ export default function Game({ user }) {
         </div>
 
         <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', margin: '0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {roomData.gameType === 'sos'         && <SOSGame roomData={roomData} user={user} />}
+          {roomData.gameType === 'sos' && <SOSGame roomData={roomData} user={user} />}
           {roomData.gameType === 'tic_tac_toe' && <TicTacToeGame roomData={roomData} user={user} />}
-          {roomData.gameType === 'rps'         && <RockPaperScissorsGame roomData={roomData} user={user} />}
-          {!['sos','tic_tac_toe','rps'].includes(roomData.gameType) && <div>Game type {roomData.gameType} is under construction!</div>}
+          {roomData.gameType === 'rps' && <RockPaperScissorsGame roomData={roomData} user={user} />}
+          {roomData.gameType === 'number_guessing' && <NumberGuessingGame roomData={roomData} user={user} />}
+          {!['sos', 'tic_tac_toe', 'rps', 'number_guessing'].includes(roomData.gameType) && <div>Game type {roomData.gameType} is under construction!</div>}
         </div>
 
         <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', margin: '0 auto', padding: '1rem', display: 'flex', flexDirection: 'column' }}>
