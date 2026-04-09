@@ -1,25 +1,71 @@
 @import url('https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&display=swap');
 
-:root {
-  /* Color Palette - Paper & Cartoon Theme */
-  --bg-primary: #f4ebd8; /* Paper background */
-  --bg-secondary: #e8cf92; /* Soft yellow for cards */
-  --accent-primary: #e6b265; /* Yellow/Gold Accent */
-  --accent-secondary: #df8b91; /* Soft Pink Accent */
-  --accent-hover: #c77b80; /* Darker Pink */
-  
-  --text-main: #4d3a2b; /* Dark brown for readability */
-  --text-muted: #6b5544;
-  --text-error: #cc4d4d;
-  
-  /* Cartoonish solid shadows instead of blurry glass */
-  --glass-bg: #e8cf92;
-  --glass-border: #4d3a2b; /* dark border for cartoon style */
-  --solid-shadow: 4px 4px 0px rgba(77, 58, 43, 0.2);
+
+/* Default: Paper & Cartoon */
+:root,
+[data-theme="paper"] {
+  --bg-primary:      #f4ebd8;
+  --bg-secondary:    #e8cf92;
+  --accent-primary:  #e6b265;
+  --accent-secondary:#df8b91;
+  --accent-hover:    #c77b80;
+  --text-main:       #4d3a2b;
+  --text-muted:      #6b5544;
+  --text-error:      #cc4d4d;
+  --glass-bg:        #e8cf92;
+  --glass-border:    #4d3a2b;
+  --solid-shadow:    4px 4px 0px rgba(77, 58, 43, 0.2);
   --solid-shadow-hover: 6px 6px 0px rgba(77, 58, 43, 0.3);
+  --input-bg:        #fff9ed;
+  --card-bg:         #fffaf0;
+  --nav-bg:          rgba(255,255,255,0.92);
+  --body-grad-1:     rgba(162, 203, 193, 0.3);
+  --body-grad-2:     rgba(223, 139, 145, 0.2);
 }
 
-* {
+/* Midnight — deep purple/indigo dark theme */
+[data-theme="midnight"] {
+  --bg-primary:      #1a1a2e;
+  --bg-secondary:    #16213e;
+  --accent-primary:  #e94560;
+  --accent-secondary:#a855f7;
+  --accent-hover:    #9333ea;
+  --text-main:       #e2e8f0;
+  --text-muted:      #94a3b8;
+  --text-error:      #f87171;
+  --glass-bg:        #16213e;
+  --glass-border:    #a855f7;
+  --solid-shadow:    4px 4px 0px rgba(168, 85, 247, 0.25);
+  --solid-shadow-hover: 6px 6px 0px rgba(168, 85, 247, 0.4);
+  --input-bg:        #0f0f23;
+  --card-bg:         #1e1e3a;
+  --nav-bg:          rgba(22, 33, 62, 0.95);
+  --body-grad-1:     rgba(168, 85, 247, 0.12);
+  --body-grad-2:     rgba(233, 69, 96, 0.1);
+}
+
+/* Ocean — teal/cyan fresh theme */
+[data-theme="ocean"] {
+  --bg-primary:      #e0f7fa;
+  --bg-secondary:    #b2ebf2;
+  --accent-primary:  #00acc1;
+  --accent-secondary:#f06292;
+  --accent-hover:    #e91e8c;
+  --text-main:       #004d5e;
+  --text-muted:      #006978;
+  --text-error:      #d32f2f;
+  --glass-bg:        #b2ebf2;
+  --glass-border:    #004d5e;
+  --solid-shadow:    4px 4px 0px rgba(0, 77, 94, 0.2);
+  --solid-shadow-hover: 6px 6px 0px rgba(0, 77, 94, 0.3);
+  --input-bg:        #e0ffff;
+  --card-bg:         #f0ffff;
+  --nav-bg:          rgba(178, 235, 242, 0.95);
+  --body-grad-1:     rgba(0, 172, 193, 0.15);
+  --body-grad-2:     rgba(240, 98, 146, 0.12);
+}
+
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
