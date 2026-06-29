@@ -11,6 +11,7 @@ import Game from './views/Game';
 import Login from './views/Login';
 import Pairing from './views/Pairing';
 import Settings from './views/Settings';
+import Milestones from './views/Milestones';
 import './index.css';
 
 function Avatar({ photoURL, name, size = 36 }) {
@@ -176,6 +177,7 @@ function App() {
         <Route path="/room/:roomId" element={<Room user={currentUser} userProfile={userProfile} />} />
         <Route path="/game/:roomId" element={<Game user={currentUser} userProfile={userProfile} />} />
         <Route path="/settings" element={<Settings userProfile={userProfile} />} />
+        <Route path="/milestones" element={<Milestones userProfile={userProfile} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );

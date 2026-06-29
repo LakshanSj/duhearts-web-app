@@ -4,7 +4,7 @@ import { changePassword } from '../firebase';
 import { updateUserProfile } from '../services/userService';
 import { openUploadWidget } from '../services/cloudinary';
 import { auth } from '../firebase';
-import { ArrowLeft, Eye, EyeOff, Save, Camera, User, Lock, Trash2, Palette } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Save, Camera, User, Lock, Trash2, Palette, Heart } from 'lucide-react';
 import { THEMES, applyTheme } from '../hooks/useTheme';
 
 const SECTIONS = [
@@ -298,10 +298,22 @@ export default function Settings({ userProfile }) {
 
   return (
     <div className="animate-in" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, gap: '0.75rem' }}>
-      <div style={{ flexShrink: 0 }}>
+      <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button className="btn btn-secondary" onClick={() => navigate('/')}
           style={{ padding: '0.4rem 0.9rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.9rem' }}>
           <ArrowLeft size={16} /> Back
+        </button>
+        {/* Milestones shortcut */}
+        <button
+          onClick={() => navigate('/milestones')}
+          style={{
+            padding: '0.4rem 0.9rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.4rem',
+            fontSize: '0.85rem', fontWeight: 700, fontFamily: 'inherit', cursor: 'pointer',
+            border: '2px solid var(--glass-border)', background: 'linear-gradient(135deg, rgba(223,139,145,0.2), rgba(230,178,101,0.15))',
+            color: 'var(--text-main)',
+          }}
+        >
+          <Heart size={14} color="var(--accent-secondary)" /> Milestones
         </button>
       </div>
 

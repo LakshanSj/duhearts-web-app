@@ -54,39 +54,33 @@ export const listenToUserProfile = (uid, callback) => {
   });
 };
 
-export const updateUserProfile = async (uid, { displayName, photoURL }) => {
-  const updates = {};
-  if (displayName !== undefined) updates.displayName = displayName;
-  if (photoURL !== undefined) updates.photoURL = photoURL;
+export const updateUserProfile = async (uid, updates) => {
   await updateDoc(doc(db, 'users', uid), updates);
 };
 
-export const pairWithPartner = async (uid, partnerCode) => {
+export const pairWithPartner = async (uid, partnerCode, relationshipStartDate) => {
   // Find partner
   const q = query(collection(db, 'users'), where('inviteCode', '==', partnerCode));
   const snapshot = await getDocs(q);
-  
-  if (snapshot.empty) {
-    throw new Error('Invalid code. Partner not found.');
-  }
+
+  if (snapshot.empty) throw new Error('Invalid code. Partner not found.');
 
   const partnerDoc = snapshot.docs[0];
   const partnerData = partnerDoc.data();
 
-  if (partnerData.uid === uid) {
-    throw new Error('You cannot pair with your own code.');
-  }
-
-  if (partnerData.partnerId) {
-    throw new Error('This partner is already paired with someone else.');
-  }
+  if (partnerData.uid === uid) throw new Error('You cannot pair with your own code.');
+  if (partnerData.partnerId) throw new Error('This partner is already paired with someone else.');
 
   const myDocRef = doc(db, 'users', uid);
   const partnerDocRef = partnerDoc.ref;
 
   const batch = writeBatch(db);
-  batch.update(myDocRef, { partnerId: partnerData.uid });
-  batch.update(partnerDocRef, { partnerId: uid });
-  
+  const sharedFields = {
+    partnerId: undefined, // set per-doc below
+    ...(relationshipStartDate ? { relationshipStartDate: relationshipStartDate.getTime() } : {}),
+  };
+  batch.update(myDocRef, { ...sharedFields, partnerId: partnerData.uid });
+  batch.update(partnerDocRef, { ...sharedFields, partnerId: uid });
+
   await batch.commit();
 };
