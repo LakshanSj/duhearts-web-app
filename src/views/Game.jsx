@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import { listenToRoom, updateGameState, listenToMessages, sendMessage, enterGame, leaveGame } from '../services/roomService';
+import { listenToRoom, updateGameState, listenToMessages, sendMessage, enterGame, leaveGame, terminateRoom } from '../services/roomService';
 import { SendHorizonal } from 'lucide-react';
 
 // ── Toast notification ────────────────────────────────────────
@@ -804,6 +804,11 @@ export default function Game({ user }) {
   useEffect(() => {
     if (!roomId) return;
     const unsubRoom = listenToRoom(roomId, (data) => {
+      if (!data) {
+        // Room was deleted (both players left) — go home
+        navigate('/', { replace: true });
+        return;
+      }
       if (data && prevRoomData.current) {
         const prev = prevRoomData.current;
         const prevActive = prev.activePlayers || [];
@@ -854,10 +859,15 @@ export default function Game({ user }) {
   };
 
   const handleBackHome = () => {
+    const doLeave = async () => {
+      // Leave the room; if we're the last one, leaveGame will delete the doc
+      await leaveGame(roomId, user);
+      navigate('/');
+    };
     if (window.showConfirm) {
-      window.showConfirm("Are you sure you want to exit the room?", () => navigate('/'));
+      window.showConfirm('Are you sure you want to exit the room?', doLeave);
     } else {
-      if (window.confirm("Exit the room?")) navigate('/');
+      if (window.confirm('Exit the room?')) doLeave();
     }
   };
 

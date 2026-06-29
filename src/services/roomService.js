@@ -1,5 +1,5 @@
 import { db } from '../firebase';
-import { doc, setDoc, getDoc, updateDoc, onSnapshot, collection, addDoc, query, orderBy, limit, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc, query, orderBy, limit, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 export const createRoom = async (gameType, user, pairId, userProfile) => {
   if (!user || !pairId) throw new Error("Must be logged in and paired");
@@ -49,8 +49,31 @@ export const enterGame = async (code, user) => {
 };
 
 export const leaveGame = async (code, user) => {
-  const roomRef = doc(db, 'rooms', code);
-  await updateDoc(roomRef, { activePlayers: arrayRemove(user.uid) });
+  try {
+    const roomRef = doc(db, 'rooms', code);
+    // Remove this player from activePlayers
+    await updateDoc(roomRef, { activePlayers: arrayRemove(user.uid) });
+
+    // Check if anyone is left — if not, terminate the room
+    const snap = await getDoc(roomRef);
+    if (snap.exists()) {
+      const remaining = snap.data().activePlayers || [];
+      if (remaining.length === 0) {
+        await deleteDoc(roomRef);
+      }
+    }
+  } catch {
+    // Room may already be deleted — safe to ignore
+  }
+};
+
+/** Explicitly terminate a room (delete it entirely). */
+export const terminateRoom = async (code) => {
+  try {
+    await deleteDoc(doc(db, 'rooms', code));
+  } catch {
+    // Already gone — fine
+  }
 };
 
 export const updateGameState = async (code, updates) => {
